@@ -1,1 +1,2041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abune Goryous School Management</title>
 
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f1f5f9;
+    color:#172033;
+}
+header{
+    background:#111827;
+    color:white;
+    padding:18px;
+    text-align:center;
+}
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+.card{
+    background:white;
+    padding:20px;
+    margin:15px 0;
+    border-radius:15px;
+    box-shadow:0 4px 15px #0002;
+}
+button{
+    border:0;
+    padding:12px 18px;
+    border-radius:9px;
+    cursor:pointer;
+    background:#111827;
+    color:white;
+    margin:5px;
+}
+button:hover{opacity:.85}
+input,select,textarea{
+    width:100%;
+    padding:12px;
+    margin:7px 0;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+}
+textarea{
+    min-height:110px;
+    resize:vertical;
+}
+.role-buttons{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-top:30px;
+}
+.role-buttons button{
+    padding:25px;
+    font-size:18px;
+}
+.hidden{display:none}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+th,td{
+    border:1px solid #ddd;
+    padding:9px;
+    text-align:center;
+}
+th{
+    background:#111827;
+    color:white;
+}
+.danger{background:#dc2626}
+.success{background:#16a34a}
+.info{background:#2563eb}
+.purple{background:#7c3aed}
+.messageBtn{background:#0891b2}
+.stat{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+.stat div{
+    background:#111827;
+    color:white;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+}
+.stat b{
+    display:block;
+    font-size:30px;
+    margin-top:8px;
+}
+.message{
+    background:#f8fafc;
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:15px;
+    margin:10px 0;
+}
+.unread{
+    border-left:5px solid #2563eb;
+}
+.small{
+    color:#64748b;
+    font-size:13px;
+}
+.infoBox{
+    background:#f8fafc;
+    padding:15px;
+    border-radius:10px;
+}
+.gradeStudents{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:10px;
+    margin-top:15px;
+}
+.studentBtn{
+    background:#2563eb;
+    text-align:left;
+}
+.markBox{
+    background:#f8fafc;
+    padding:12px;
+    border-radius:10px;
+    margin:8px 0;
+}
+.totalBox{
+    background:#111827;
+    color:white;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+    font-size:18px;
+}
+@media(max-width:600px){
+    table{font-size:12px}
+    th,td{padding:6px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🏫 Abune Goryous School Management</h1>
+<p>Admin • Teacher • Student • Parent</p>
+</header>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home">
+
+<div class="card">
+<h2>Welcome</h2>
+<p>Select your account type:</p>
+
+<div class="role-buttons">
+
+<button onclick="openLogin('admin')">
+👨‍💼 Admin Login
+</button>
+
+<button onclick="openLogin('teacher')">
+👨‍🏫 Teacher Login
+</button>
+
+<button onclick="openLogin('student')">
+👨‍🎓 Student Login
+</button>
+
+<button class="purple" onclick="openLogin('parent')">
+👨‍👩‍👦 Parent Login
+</button>
+
+</div>
+</div>
+</section>
+
+
+<!-- LOGIN -->
+<section id="login" class="hidden">
+
+<div class="card">
+
+<h2 id="loginTitle">Login</h2>
+
+<input id="loginName" placeholder="Name">
+<input id="loginId" placeholder="ID">
+
+<div id="gradeBox">
+<input id="loginGrade" placeholder="Grade">
+</div>
+
+<input id="loginPassword"
+type="password"
+placeholder="Password">
+
+<button class="success" onclick="login()">Login</button>
+<button onclick="goHome()">Back</button>
+
+<div id="loginMessage"></div>
+
+</div>
+</section>
+
+
+<!-- ADMIN -->
+<section id="admin" class="hidden">
+
+<div class="card">
+
+<h2>👨‍💼 Admin Dashboard</h2>
+
+<div class="stat">
+
+<div>
+Teachers
+<b id="teacherCount">0</b>
+/ 70
+</div>
+
+<div>
+Students
+<b id="studentCount">0</b>
+/ 1300
+</div>
+
+<div>
+Parents
+<b id="parentCount">0</b>
+</div>
+
+<div>
+Messages
+<b id="messageCount">0</b>
+</div>
+
+</div>
+</div>
+
+
+<!-- ADD TEACHER -->
+<div class="card">
+
+<h2>➕ Add Teacher</h2>
+
+<input id="teacherName" placeholder="Teacher Name">
+<input id="teacherId" placeholder="Teacher ID">
+<input id="teacherGrade" placeholder="Teacher Grade">
+<input id="teacherPassword"
+type="password"
+placeholder="Teacher Password">
+
+<button class="success" onclick="addTeacher()">
+Add Teacher
+</button>
+
+</div>
+
+
+<!-- TEACHERS -->
+<div class="card">
+
+<h2>👨‍🏫 Teacher Management</h2>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name</th>
+<th>ID</th>
+<th>Grade</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="teacherTable"></tbody>
+</table>
+
+</div>
+
+
+<!-- ADD STUDENT -->
+<div class="card">
+
+<h2>➕ Add Student</h2>
+
+<input id="studentName" placeholder="Student Name">
+<input id="studentId" placeholder="Student ID">
+<input id="studentGrade" placeholder="Grade">
+<input id="studentPassword"
+type="password"
+placeholder="Student Password">
+
+<button class="success" onclick="addStudent()">
+Add Student
+</button>
+
+</div>
+
+
+<!-- STUDENTS -->
+<div class="card">
+
+<h2>👨‍🎓 Student Management</h2>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name</th>
+<th>ID</th>
+<th>Grade</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="studentTable"></tbody>
+</table>
+
+</div>
+
+
+<!-- ADD PARENT -->
+<div class="card">
+
+<h2>➕ Add Parent</h2>
+
+<input id="parentName" placeholder="Parent Name">
+<input id="parentStudentId" placeholder="Student ID">
+<input id="parentPassword"
+type="password"
+placeholder="Parent Password">
+
+<button class="success" onclick="addParent()">
+Add Parent
+</button>
+
+</div>
+
+
+<!-- PARENTS -->
+<div class="card">
+
+<h2>👨‍👩‍👦 Parent Management</h2>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Parent</th>
+<th>Student ID</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="parentTable"></tbody>
+</table>
+
+</div>
+
+
+<!-- ADMIN MESSAGE -->
+<div class="card">
+
+<h2>💬 Admin Communication</h2>
+
+<select id="adminTo">
+<option value="">Select recipient</option>
+<option value="teacher">Teacher</option>
+<option value="parent">Parent</option>
+</select>
+
+<input id="adminRecipient"
+placeholder="Teacher ID or Student ID">
+
+<textarea id="adminText"
+placeholder="Write your message..."></textarea>
+
+<button class="messageBtn"
+onclick="sendAdminMessage()">
+📩 Send Message
+</button>
+
+</div>
+
+
+<div class="card">
+<h2>📥 Admin Inbox</h2>
+<div id="adminInbox"></div>
+</div>
+
+<button class="danger" onclick="logout()">Logout</button>
+
+</section>
+
+
+<!-- TEACHER -->
+<section id="teacher" class="hidden">
+
+<div class="card">
+
+<h2>👨‍🏫 Teacher Dashboard</h2>
+<p id="teacherWelcome"></p>
+
+<h3>📚 Select Grade</h3>
+
+<select id="teacherGradeSelect"
+onchange="showGradeStudents()">
+
+<option value="">Select Grade</option>
+<option value="1">Grade 1</option>
+<option value="2">Grade 2</option>
+<option value="3">Grade 3</option>
+<option value="4">Grade 4</option>
+<option value="5">Grade 5</option>
+<option value="6">Grade 6</option>
+<option value="7">Grade 7</option>
+<option value="8">Grade 8</option>
+
+</select>
+
+<div id="gradeStudents"
+class="gradeStudents"></div>
+
+</div>
+
+
+<!-- RESULT EDITOR -->
+<div id="resultEditor" class="card hidden">
+
+<h2>📊 Student Results</h2>
+
+<p id="resultStudentInfo"></p>
+
+<div id="subjects"></div>
+
+<div class="totalBox">
+Total: <span id="teacherTotal">0</span> / 100
+<br>
+Percentage: <span id="teacherAverage">0</span>%
+</div>
+
+<button class="success" onclick="saveMarks()">
+💾 Save / Update Results
+</button>
+
+</div>
+
+
+<!-- TEACHER COMMUNICATION -->
+<div class="card">
+
+<h2>💬 Teacher Communication</h2>
+
+<select id="teacherTo">
+<option value="">Select recipient</option>
+<option value="admin">Admin</option>
+<option value="parent">Parent</option>
+</select>
+
+<input id="teacherRecipient"
+placeholder="Admin ID or Student ID">
+
+<textarea id="teacherText"
+placeholder="Write your message..."></textarea>
+
+<button class="messageBtn"
+onclick="sendTeacherMessage()">
+📩 Send Message
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>📥 Teacher Inbox</h2>
+<div id="teacherInbox"></div>
+
+</div>
+
+<button class="danger" onclick="logout()">Logout</button>
+
+</section>
+
+
+<!-- STUDENT -->
+<section id="student" class="hidden">
+
+<div class="card">
+
+<h2>👨‍🎓 Student Dashboard</h2>
+
+<div id="studentInfo"></div>
+
+<h3>📚 My Results</h3>
+
+<table>
+<thead>
+<tr>
+<th>Assessment</th>
+<th>Mark</th>
+<th>Maximum</th>
+</tr>
+</thead>
+
+<tbody id="myResults"></tbody>
+</table>
+
+<h3 id="total"></h3>
+<h3 id="average"></h3>
+
+</div>
+
+
+<div class="card">
+
+<h2>📥 My Messages</h2>
+
+<p>Student can view results only.</p>
+
+</div>
+
+<button class="danger" onclick="logout()">Logout</button>
+
+</section>
+
+
+<!-- PARENT -->
+<section id="parent" class="hidden">
+
+<div class="card">
+
+<h2>👨‍👩‍👦 Parent Dashboard</h2>
+
+<div id="parentInfo" class="infoBox"></div>
+
+<h3>📚 Child's Results</h3>
+
+<table>
+<thead>
+<tr>
+<th>Assessment</th>
+<th>Mark</th>
+<th>Maximum</th>
+</tr>
+</thead>
+
+<tbody id="parentResults"></tbody>
+</table>
+
+<h3 id="parentTotal"></h3>
+<h3 id="parentAverage"></h3>
+
+</div>
+
+
+<div class="card">
+
+<h2>💬 Parent Communication</h2>
+
+<select id="parentTo">
+
+<option value="">Select recipient</option>
+<option value="teacher">Teacher</option>
+<option value="admin">Admin</option>
+
+</select>
+
+<input id="parentRecipient"
+placeholder="Teacher ID or Admin ID">
+
+<textarea id="parentText"
+placeholder="Write your message..."></textarea>
+
+<button class="messageBtn"
+onclick="sendParentMessage()">
+📩 Send Message
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>📥 Parent Inbox</h2>
+<div id="parentInbox"></div>
+
+</div>
+
+<button class="danger" onclick="logout()">Logout</button>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================
+   6 ASSESSMENTS = 100
+========================= */
+
+const assessments = [
+    {name:"Assignment 1", max:10},
+    {name:"Assignment 2", max:10},
+    {name:"Assignment 3", max:10},
+    {name:"Exam 1", max:20},
+    {name:"Exam 2", max:40},
+    {name:"Participation", max:10}
+];
+
+
+/* =========================
+   DATABASE
+========================= */
+
+let teachers =
+JSON.parse(localStorage.getItem("schoolTeachers")) || [];
+
+let students =
+JSON.parse(localStorage.getItem("schoolStudents")) || [];
+
+let parents =
+JSON.parse(localStorage.getItem("schoolParents")) || [];
+
+let messages =
+JSON.parse(localStorage.getItem("schoolMessages")) || [];
+
+
+/* =========================
+   DEFAULT ADMIN
+========================= */
+
+const ADMIN = {
+    name:"Admin",
+    id:"ADMIN001",
+    password:"admin123"
+};
+
+
+/* =========================
+   DEFAULT TEACHER
+========================= */
+
+if(teachers.length === 0){
+
+teachers.push({
+    name:"Demo Teacher",
+    id:"T001",
+    grade:"8",
+    password:"teacher123"
+});
+
+saveData();
+
+}
+
+
+/* =========================
+   DEFAULT STUDENT
+========================= */
+
+if(students.length === 0){
+
+students.push({
+    name:"Student One",
+    id:"S001",
+    grade:"8",
+    password:"1234",
+    results:{}
+});
+
+saveData();
+
+}
+
+
+/* =========================
+   DEFAULT PARENT
+========================= */
+
+if(parents.length === 0){
+
+parents.push({
+    name:"Parent One",
+    studentId:"S001",
+    password:"parent123"
+});
+
+saveData();
+
+}
+
+
+/* =========================
+   CURRENT USER
+========================= */
+
+let currentRole="";
+let currentTeacher=null;
+let currentStudent=null;
+let currentParent=null;
+
+
+/* =========================
+   LOGIN
+========================= */
+
+function openLogin(role){
+
+currentRole=role;
+
+show("login");
+
+document.getElementById("loginMessage").innerHTML="";
+
+document.getElementById("loginName").value="";
+document.getElementById("loginId").value="";
+document.getElementById("loginGrade").value="";
+document.getElementById("loginPassword").value="";
+
+if(role==="admin"){
+
+document.getElementById("loginTitle").innerText=
+"👨‍💼 Admin Login";
+
+document.getElementById("gradeBox").style.display="none";
+
+}
+
+else if(role==="teacher"){
+
+document.getElementById("loginTitle").innerText=
+"👨‍🏫 Teacher Login";
+
+document.getElementById("gradeBox").style.display="none";
+
+}
+
+else if(role==="student"){
+
+document.getElementById("loginTitle").innerText=
+"👨‍🎓 Student Login";
+
+document.getElementById("gradeBox").style.display="block";
+
+}
+
+else{
+
+document.getElementById("loginTitle").innerText=
+"👨‍👩‍👦 Parent Login";
+
+document.getElementById("gradeBox").style.display="none";
+
+}
+
+}
+
+
+/* =========================
+   LOGIN CHECK
+========================= */
+
+function login(){
+
+let name=document.getElementById("loginName").value.trim();
+let id=document.getElementById("loginId").value.trim();
+let grade=document.getElementById("loginGrade").value.trim();
+let password=document.getElementById("loginPassword").value;
+
+let msg=document.getElementById("loginMessage");
+
+
+/* ADMIN */
+
+if(currentRole==="admin"){
+
+if(
+name===ADMIN.name &&
+id===ADMIN.id &&
+password===ADMIN.password
+){
+
+updateAdmin();
+loadAdminInbox();
+show("admin");
+
+}else{
+
+msg.innerHTML="❌ Wrong Admin login information";
+
+}
+
+return;
+}
+
+
+/* TEACHER */
+
+if(currentRole==="teacher"){
+
+let teacher=teachers.find(t=>
+t.name.toLowerCase()===name.toLowerCase() &&
+t.id===id &&
+t.password===password
+);
+
+if(teacher){
+
+currentTeacher=teacher;
+
+document.getElementById("teacherWelcome").innerText=
+"Welcome " + teacher.name +
+" | Assigned Grade: " + teacher.grade;
+
+document.getElementById("teacherGradeSelect").value=
+teacher.grade;
+
+show("teacher");
+showGradeStudents();
+loadTeacherInbox();
+
+}else{
+
+msg.innerHTML=
+"❌ Wrong Teacher Name, ID or Password";
+
+}
+
+return;
+}
+
+
+/* STUDENT */
+
+if(currentRole==="student"){
+
+let student=students.find(s=>
+s.name.toLowerCase()===name.toLowerCase() &&
+s.id===id &&
+s.grade===grade &&
+s.password===password
+);
+
+if(student){
+
+currentStudent=student;
+
+showStudent(student);
+show("student");
+
+}else{
+
+msg.innerHTML=
+"❌ Wrong Student login information";
+
+}
+
+return;
+}
+
+
+/* PARENT */
+
+if(currentRole==="parent"){
+
+let parent=parents.find(p=>
+p.name.toLowerCase()===name.toLowerCase() &&
+p.studentId===id &&
+p.password===password
+);
+
+if(!parent){
+
+msg.innerHTML=
+"❌ Wrong Parent login information";
+
+return;
+}
+
+let child=students.find(s=>
+s.id===parent.studentId
+);
+
+if(!child){
+
+msg.innerHTML=
+"❌ Child not found";
+
+return;
+}
+
+currentParent=parent;
+currentStudent=child;
+
+showParent(child,parent);
+show("parent");
+loadParentInbox();
+
+}
+
+}
+
+
+/* =========================
+   ADD TEACHER
+========================= */
+
+function addTeacher(){
+
+if(teachers.length>=70){
+
+alert("Maximum 70 teachers reached!");
+return;
+
+}
+
+let name=document.getElementById("teacherName").value.trim();
+let id=document.getElementById("teacherId").value.trim();
+let grade=document.getElementById("teacherGrade").value.trim();
+let password=document.getElementById("teacherPassword").value;
+
+if(!name||!id||!grade||!password){
+
+alert("Fill all teacher fields!");
+return;
+
+}
+
+if(teachers.some(t=>t.id===id)){
+
+alert("Teacher ID already exists!");
+return;
+
+}
+
+teachers.push({
+name:name,
+id:id,
+grade:grade,
+password:password
+});
+
+saveData();
+
+document.getElementById("teacherName").value="";
+document.getElementById("teacherId").value="";
+document.getElementById("teacherGrade").value="";
+document.getElementById("teacherPassword").value="";
+
+updateAdmin();
+
+alert("✅ Teacher added successfully!");
+
+}
+
+
+/* =========================
+   DELETE TEACHER
+========================= */
+
+function deleteTeacher(index){
+
+if(confirm("Delete this teacher?")){
+
+teachers.splice(index,1);
+
+saveData();
+updateAdmin();
+
+}
+
+}
+
+
+/* =========================
+   ADD STUDENT
+========================= */
+
+function addStudent(){
+
+if(students.length>=1300){
+
+alert("Maximum 1300 students reached!");
+return;
+
+}
+
+let name=document.getElementById("studentName").value.trim();
+let id=document.getElementById("studentId").value.trim();
+let grade=document.getElementById("studentGrade").value.trim();
+let password=document.getElementById("studentPassword").value;
+
+if(!name||!id||!grade||!password){
+
+alert("Fill all student fields!");
+return;
+
+}
+
+if(students.some(s=>s.id===id)){
+
+alert("Student ID already exists!");
+return;
+
+}
+
+students.push({
+name:name,
+id:id,
+grade:grade,
+password:password,
+results:{}
+});
+
+saveData();
+
+document.getElementById("studentName").value="";
+document.getElementById("studentId").value="";
+document.getElementById("studentGrade").value="";
+document.getElementById("studentPassword").value="";
+
+updateAdmin();
+
+alert("✅ Student added successfully!");
+
+}
+
+
+/* =========================
+   DELETE STUDENT
+========================= */
+
+function deleteStudent(index){
+
+if(confirm("Delete this student?")){
+
+students.splice(index,1);
+
+saveData();
+updateAdmin();
+
+}
+
+}
+
+
+/* =========================
+   ADD PARENT
+========================= */
+
+function addParent(){
+
+let name=document.getElementById("parentName").value.trim();
+let studentId=document.getElementById("parentStudentId").value.trim();
+let password=document.getElementById("parentPassword").value;
+
+if(!name||!studentId||!password){
+
+alert("Fill all parent fields!");
+return;
+
+}
+
+if(!students.some(s=>s.id===studentId)){
+
+alert("Student ID does not exist!");
+return;
+
+}
+
+parents.push({
+name:name,
+studentId:studentId,
+password:password
+});
+
+saveData();
+
+document.getElementById("parentName").value="";
+document.getElementById("parentStudentId").value="";
+document.getElementById("parentPassword").value="";
+
+updateAdmin();
+
+alert("✅ Parent added successfully!");
+
+}
+
+
+/* =========================
+   DELETE PARENT
+========================= */
+
+function deleteParent(index){
+
+if(confirm("Delete this parent?")){
+
+parents.splice(index,1);
+
+saveData();
+updateAdmin();
+
+}
+
+}
+
+
+/* =========================
+   ADMIN TABLES
+========================= */
+
+function updateAdmin(){
+
+document.getElementById("teacherCount").innerText=
+teachers.length;
+
+document.getElementById("studentCount").innerText=
+students.length;
+
+document.getElementById("parentCount").innerText=
+parents.length;
+
+document.getElementById("messageCount").innerText=
+messages.length;
+
+
+/* TEACHERS */
+
+let teacherHTML="";
+
+teachers.forEach((t,i)=>{
+
+teacherHTML+=`
+<tr>
+<td>${i+1}</td>
+<td>${escapeHTML(t.name)}</td>
+<td>${escapeHTML(t.id)}</td>
+<td>${escapeHTML(t.grade)}</td>
+<td>
+<button class="danger"
+onclick="deleteTeacher(${i})">
+Delete
+</button>
+</td>
+</tr>
+`;
+
+});
+
+document.getElementById("teacherTable").innerHTML=
+teacherHTML;
+
+
+/* STUDENTS */
+
+let studentHTML="";
+
+students.forEach((s,i)=>{
+
+studentHTML+=`
+<tr>
+<td>${i+1}</td>
+<td>${escapeHTML(s.name)}</td>
+<td>${escapeHTML(s.id)}</td>
+<td>${escapeHTML(s.grade)}</td>
+<td>
+<button class="danger"
+onclick="deleteStudent(${i})">
+Delete
+</button>
+</td>
+</tr>
+`;
+
+});
+
+document.getElementById("studentTable").innerHTML=
+studentHTML;
+
+
+/* PARENTS */
+
+let parentHTML="";
+
+parents.forEach((p,i)=>{
+
+parentHTML+=`
+<tr>
+<td>${i+1}</td>
+<td>${escapeHTML(p.name)}</td>
+<td>${escapeHTML(p.studentId)}</td>
+<td>
+<button class="danger"
+onclick="deleteParent(${i})">
+Delete
+</button>
+</td>
+</tr>
+`;
+
+});
+
+document.getElementById("parentTable").innerHTML=
+parentHTML;
+
+}
+
+
+/* =========================
+   TEACHER GRADE STUDENTS
+========================= */
+
+function showGradeStudents(){
+
+if(!currentTeacher) return;
+
+let grade=
+document.getElementById("teacherGradeSelect").value;
+
+let box=
+document.getElementById("gradeStudents");
+
+box.innerHTML="";
+
+if(!grade){
+
+box.innerHTML="<p>Select a Grade.</p>";
+return;
+
+}
+
+
+/* Teacher can see only assigned grade */
+
+if(String(currentTeacher.grade)!==String(grade)){
+
+box.innerHTML=
+"<p>❌ You can only manage your assigned Grade.</p>";
+
+return;
+
+}
+
+let list=students.filter(s=>
+String(s.grade)===String(grade)
+);
+
+if(list.length===0){
+
+box.innerHTML=
+"<p>No students found in this Grade.</p>";
+
+return;
+
+}
+
+list.forEach((student,index)=>{
+
+box.innerHTML+=`
+
+<button class="studentBtn"
+onclick="selectStudentForMarks('${student.id}')">
+
+👨‍🎓 ${escapeHTML(student.name)}
+<br>
+<small>ID: ${escapeHTML(student.id)}</small>
+
+</button>
+
+`;
+
+});
+
+}
+
+
+/* =========================
+   SELECT STUDENT
+========================= */
+
+function selectStudentForMarks(id){
+
+let student=
+students.find(s=>s.id===id);
+
+if(!student) return;
+
+currentStudent=student;
+
+document.getElementById("resultEditor")
+.classList.remove("hidden");
+
+document.getElementById("resultStudentInfo").innerHTML=
+`
+<b>Name:</b> ${escapeHTML(student.name)}
+<br>
+<b>ID:</b> ${escapeHTML(student.id)}
+<br>
+<b>Grade:</b> ${escapeHTML(student.grade)}
+`;
+
+let html="";
+
+assessments.forEach((a,index)=>{
+
+let value=
+student.results?.[a.name] ?? "";
+
+html+=`
+
+<div class="markBox">
+
+<label>
+<b>${index+1}. ${a.name}</b>
+<br>
+Maximum: ${a.max} points
+</label>
+
+<input
+class="markInput"
+data-name="${a.name}"
+data-max="${a.max}"
+type="number"
+min="0"
+max="${a.max}"
+value="${value}"
+placeholder="0 - ${a.max}"
+oninput="calculateTeacherTotal()">
+
+</div>
+
+`;
+
+});
+
+document.getElementById("subjects").innerHTML=html;
+
+calculateTeacherTotal();
+
+}
+
+
+/* =========================
+   CALCULATE TOTAL
+========================= */
+
+function calculateTeacherTotal(){
+
+let inputs=
+document.querySelectorAll(".markInput");
+
+let total=0;
+
+inputs.forEach(input=>{
+
+let value=Number(input.value)||0;
+total+=value;
+
+});
+
+document.getElementById("teacherTotal").innerText=
+total;
+
+document.getElementById("teacherAverage").innerText=
+total+"%";
+
+}
+
+
+/* =========================
+   SAVE MARKS
+========================= */
+
+function saveMarks(){
+
+if(!currentStudent){
+
+alert("Select a student first!");
+return;
+
+}
+
+let inputs=
+document.querySelectorAll(".markInput");
+
+let results={};
+let total=0;
+
+for(let input of inputs){
+
+let name=input.dataset.name;
+let max=Number(input.dataset.max);
+let mark=input.value;
+
+if(mark===""){
+mark=0;
+}
+
+mark=Number(mark);
+
+if(mark<0||mark>max){
+
+alert(
+name+" must be between 0 and "+max+"!"
+);
+return;
+
+}
+
+results[name]=mark;
+total+=mark;
+
+}
+
+currentStudent.results=results;
+
+saveData();
+
+alert(
+"✅ Results saved! Total = "+total+" / 100"
+);
+
+showStudent(currentStudent);
+
+}
+
+
+/* =========================
+   SHOW STUDENT RESULTS
+========================= */
+
+function showStudent(student){
+
+document.getElementById("studentInfo").innerHTML=
+`
+<p><b>Name:</b> ${escapeHTML(student.name)}</p>
+<p><b>ID:</b> ${escapeHTML(student.id)}</p>
+<p><b>Grade:</b> ${escapeHTML(student.grade)}</p>
+`;
+
+let html="";
+let total=0;
+
+assessments.forEach(a=>{
+
+let mark=
+Number(student.results?.[a.name]??0);
+
+total+=mark;
+
+html+=`
+<tr>
+<td>${escapeHTML(a.name)}</td>
+<td>${mark}</td>
+<td>${a.max}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("myResults").innerHTML=
+html;
+
+document.getElementById("total").innerText=
+"Total: "+total+" / 100";
+
+document.getElementById("average").innerText=
+"Percentage: "+total+"%";
+
+}
+
+
+/* =========================
+   SHOW PARENT
+========================= */
+
+function showParent(student,parent){
+
+document.getElementById("parentInfo").innerHTML=
+`
+<p><b>Parent:</b> ${escapeHTML(parent.name)}</p>
+<p><b>Child:</b> ${escapeHTML(student.name)}</p>
+<p><b>Student ID:</b> ${escapeHTML(student.id)}</p>
+<p><b>Grade:</b> ${escapeHTML(student.grade)}</p>
+`;
+
+let html="";
+let total=0;
+
+assessments.forEach(a=>{
+
+let mark=
+Number(student.results?.[a.name]??0);
+
+total+=mark;
+
+html+=`
+<tr>
+<td>${escapeHTML(a.name)}</td>
+<td>${mark}</td>
+<td>${a.max}</td>
+</tr>
+`;
+
+});
+
+document.getElementById("parentResults").innerHTML=
+html;
+
+document.getElementById("parentTotal").innerText=
+"Total: "+total+" / 100";
+
+document.getElementById("parentAverage").innerText=
+"Percentage: "+total+"%";
+
+}
+
+
+/* =========================
+   ADMIN → TEACHER / PARENT
+========================= */
+
+function sendAdminMessage(){
+
+let to=document.getElementById("adminTo").value;
+let recipient=document.getElementById("adminRecipient").value.trim();
+let text=document.getElementById("adminText").value.trim();
+
+if(!to||!recipient||!text){
+
+alert("Select recipient and write message!");
+return;
+
+}
+
+if(to==="teacher"){
+
+let teacher=
+teachers.find(t=>t.id===recipient);
+
+if(!teacher){
+
+alert("Teacher ID not found!");
+return;
+
+}
+
+messages.push({
+fromRole:"Admin",
+fromId:ADMIN.id,
+fromName:ADMIN.name,
+toRole:"Teacher",
+toId:teacher.id,
+toName:teacher.name,
+text:text,
+date:new Date().toLocaleString(),
+read:false
+});
+
+}
+
+if(to==="parent"){
+
+let parent=
+parents.find(p=>p.studentId===recipient);
+
+if(!parent){
+
+alert("Parent not found for this Student ID!");
+return;
+
+}
+
+messages.push({
+fromRole:"Admin",
+fromId:ADMIN.id,
+fromName:ADMIN.name,
+toRole:"Parent",
+toId:parent.studentId,
+toName:parent.name,
+text:text,
+date:new Date().toLocaleString(),
+read:false
+});
+
+}
+
+saveData();
+
+document.getElementById("adminText").value="";
+
+alert("✅ Message sent!");
+
+loadAdminInbox();
+
+}
+
+
+/* =========================
+   TEACHER → ADMIN / PARENT
+========================= */
+
+function sendTeacherMessage(){
+
+if(!currentTeacher){
+
+alert("Teacher not logged in!");
+return;
+
+}
+
+let to=document.getElementById("teacherTo").value;
+let recipient=document.getElementById("teacherRecipient").value.trim();
+let text=document.getElementById("teacherText").value.trim();
+
+if(!to||!recipient||!text){
+
+alert("Select recipient and write message!");
+return;
+
+}
+
+if(to==="admin"){
+
+if(recipient!==ADMIN.id){
+
+alert("Admin ID is ADMIN001");
+return;
+
+}
+
+messages.push({
+fromRole:"Teacher",
+fromId:currentTeacher.id,
+fromName:currentTeacher.name,
+toRole:"Admin",
+toId:ADMIN.id,
+toName:ADMIN.name,
+text:text,
+date:new Date().toLocaleString(),
+read:false
+});
+
+}
+
+if(to==="parent"){
+
+let parent=
+parents.find(p=>p.studentId===recipient);
+
+if(!parent){
+
+alert("Parent not found for this Student ID!");
+return;
+
+}
+
+messages.push({
+fromRole:"Teacher",
+fromId:currentTeacher.id,
+fromName:currentTeacher.name,
+toRole:"Parent",
+toId:parent.studentId,
+toName:parent.name,
+text:text,
+date:new Date().toLocaleString(),
+read:false
+});
+
+}
+
+saveData();
+
+document.getElementById("teacherText").value="";
+
+alert("✅ Message sent!");
+
+loadTeacherInbox();
+
+}
+
+
+/* =========================
+   PARENT → TEACHER / ADMIN
+========================= */
+
+function sendParentMessage(){
+
+if(!currentParent){
+
+alert("Parent not logged in!");
+return;
+
+}
+
+let to=document.getElementById("parentTo").value;
+let recipient=document.getElementById("parentRecipient").value.trim();
+let text=document.getElementById("parentText").value.trim();
+
+if(!to||!recipient||!text){
+
+alert("Select recipient and write message!");
+return;
+
+}
+
+if(to==="admin"){
+
+if(recipient!==ADMIN.id){
+
+alert("Admin ID is ADMIN001");
+return;
+
+}
+
+messages.push({
+fromRole:"Parent",
+fromId:currentParent.studentId,
+fromName:currentParent.name,
+toRole:"Admin",
+toId:ADMIN.id,
+toName:ADMIN.name,
+text:text,
+date:new Date().toLocaleString(),
+read:false
+});
+
+}
+
+if(to==="teacher"){
+
+let teacher=
+teachers.find(t=>t.id===recipient);
+
+if(!teacher){
+
+alert("Teacher ID not found!");
+return;
+
+}
+
+messages.push({
+fromRole:"Parent",
+fromId:currentParent.studentId,
+fromName:currentParent.name,
+toRole:"Teacher",
+toId:teacher.id,
+toName:teacher.name,
+text:text,
+date:new Date().toLocaleString(),
+read:false
+});
+
+}
+
+saveData();
+
+document.getElementById("parentText").value="";
+
+alert("✅ Message sent!");
+
+loadParentInbox();
+
+}
+
+
+/* =========================
+   ADMIN INBOX
+========================= */
+
+function loadAdminInbox(){
+
+let box=document.getElementById("adminInbox");
+
+let inbox=messages.filter(m=>
+m.toRole==="Admin" &&
+m.toId===ADMIN.id
+);
+
+if(inbox.length===0){
+
+box.innerHTML="<p>No messages yet.</p>";
+return;
+
+}
+
+box.innerHTML="";
+
+inbox.forEach(m=>{
+
+box.innerHTML+=`
+
+<div class="message ${m.read?"":"unread"}">
+
+<b>From:</b>
+${escapeHTML(m.fromName)}
+(${escapeHTML(m.fromRole)})
+
+<br>
+
+<small class="small">
+${escapeHTML(m.date)}
+</small>
+
+<p>${escapeHTML(m.text)}</p>
+
+</div>
+
+`;
+
+m.read=true;
+
+});
+
+saveData();
+
+}
+
+
+/* =========================
+   TEACHER INBOX
+========================= */
+
+function loadTeacherInbox(){
+
+if(!currentTeacher) return;
+
+let box=document.getElementById("teacherInbox");
+
+let inbox=messages.filter(m=>
+m.toRole==="Teacher" &&
+m.toId===currentTeacher.id
+);
+
+if(inbox.length===0){
+
+box.innerHTML="<p>No messages yet.</p>";
+return;
+
+}
+
+box.innerHTML="";
+
+inbox.forEach(m=>{
+
+box.innerHTML+=`
+
+<div class="message ${m.read?"":"unread"}">
+
+<b>From:</b>
+${escapeHTML(m.fromName)}
+(${escapeHTML(m.fromRole)})
+
+<br>
+
+<small class="small">
+${escapeHTML(m.date)}
+</small>
+
+<p>${escapeHTML(m.text)}</p>
+
+</div>
+
+`;
+
+m.read=true;
+
+});
+
+saveData();
+
+}
+
+
+/* =========================
+   PARENT INBOX
+========================= */
+
+function loadParentInbox(){
+
+if(!currentParent) return;
+
+let box=document.getElementById("parentInbox");
+
+let inbox=messages.filter(m=>
+m.toRole==="Parent" &&
+m.toId===currentParent.studentId
+);
+
+if(inbox.length===0){
+
+box.innerHTML="<p>No messages yet.</p>";
+return;
+
+}
+
+box.innerHTML="";
+
+inbox.forEach(m=>{
+
+box.innerHTML+=`
+
+<div class="message ${m.read?"":"unread"}">
+
+<b>From:</b>
+${escapeHTML(m.fromName)}
+(${escapeHTML(m.fromRole)})
+
+<br>
+
+<small class="small">
+${escapeHTML(m.date)}
+</small>
+
+<p>${escapeHTML(m.text)}</p>
+
+</div>
+
+`;
+
+m.read=true;
+
+});
+
+saveData();
+
+}
+
+
+/* =========================
+   SAVE DATABASE
+========================= */
+
+function saveData(){
+
+localStorage.setItem(
+"schoolTeachers",
+JSON.stringify(teachers)
+);
+
+localStorage.setItem(
+"schoolStudents",
+JSON.stringify(students)
+);
+
+localStorage.setItem(
+"schoolParents",
+JSON.stringify(parents)
+);
+
+localStorage.setItem(
+"schoolMessages",
+JSON.stringify(messages)
+);
+
+}
+
+
+/* =========================
+   SHOW PAGE
+========================= */
+
+function show(id){
+
+document.querySelectorAll("section")
+.forEach(section=>{
+section.classList.add("hidden");
+});
+
+document.getElementById(id)
+.classList.remove("hidden");
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function goHome(){
+show("home");
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+currentRole="";
+currentTeacher=null;
+currentStudent=null;
+currentParent=null;
+
+show("home");
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(text){
+
+return String(text)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+updateAdmin();
+
+</script>
+
+</body>
+</html>
